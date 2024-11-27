@@ -225,13 +225,8 @@ def main(args):
     target_features = [col for col in df_complete.columns if col != "Target"]
     target_dtypes = determine_target_dtypes(df_complete)
 
-    if dataset_type == 'synthetic':
-        print(f"Introducing missing values at a rate of {sample_coeff * 100}%.")
-        df_missing, missing_mask = introduce_missingness(df_complete, sample_coeff, random_state=42)
-    else:
-        df_missing = df_complete.copy()
-        missing_mask = pd.DataFrame(False, index=df_missing.index, columns=df_missing.columns)
-
+    print(f"Introducing missing values at a rate of {sample_coeff * 100}%.")
+    df_missing, missing_mask = introduce_missingness(df_complete, sample_coeff, random_state=42)
 
     if method == 'parallel':
         print("Starting parallel Random Forest imputation using custom package.")
@@ -275,16 +270,13 @@ def main(args):
         raise ValueError("Unsupported method. Choose 'parallel' or 'sklearn'.")
 
     # Evaluate imputation (only for synthetic data where original data is known)
-    if dataset_type == 'synthetic':
-        print("Evaluating imputation performance.")
-        metrics = evaluate_imputation(df_complete, imputed_df, missing_mask, target_features, target_dtypes)
-        for column, metric in metrics.items():
-            if 'accuracy' in metric:
-                print(f"Column: {column} | Accuracy: {metric['accuracy']:.4f}")
-            elif 'rmse' in metric:
-                print(f"Column: {column} | RMSE: {metric['rmse']:.4f}")
-    else:
-        print("Evaluation on real data is not performed as original missing values are unknown.")
+    print("Evaluating imputation performance.")
+    metrics = evaluate_imputation(df_complete, imputed_df, missing_mask, target_features, target_dtypes)
+    for column, metric in metrics.items():
+        if 'accuracy' in metric:
+            print(f"Column: {column} | Accuracy: {metric['accuracy']:.4f}")
+        elif 'rmse' in metric:
+            print(f"Column: {column} | RMSE: {metric['rmse']:.4f}")
 
     # Optionally, save the imputed dataset
     if args.save_output:

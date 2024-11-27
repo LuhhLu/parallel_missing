@@ -1,3 +1,4 @@
+pip install numpy pandas scikit-learn
 
 mac os using llvm and do the pathconfig
 
@@ -14,6 +15,13 @@ python imputation_experiment.py \
     --n_trees 1000 \
     --max_features 5 \
     --sample_coeff 0.2 \
-    --num_threads 4 \
-    --save_output \
-    --output_path imputed_synthetic_10000_rows_10_features.csv
+    --num_threads 32 
+
+python imputation_experiment.py \
+    --dataset_type real \
+    --real_data_path winequality.csv\
+    --method sklearn \
+    --n_trees 1000 \
+    --max_features 5 \
+    --sample_coeff 0.2 \
+    --num_threads 32 
