@@ -1,3 +1,0 @@
-ssh -L 6000:crunchy1.cims.nyu.edu:22 hl5438@access.cims.nyu.edu
-
-YCf=9Wne
